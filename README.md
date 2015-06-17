@@ -20,7 +20,8 @@ LibraryBook.create(library: 'Shevchenko', floor: 2, row_number: 15, shelf: 115, 
 LibraryBook.create(library: 'Skovoroda', floor: 1, row_number: 25, shelf: 34, name: 'Harry Potter', author: 'J.K. Rowling')
 LibraryBook.create(library: 'Skovoroda', floor: 2, row_number: 12, shelf: 15, name: 'Hobbit', author: ' J.R.R. Tolkien')
 
-expect(LibraryBook.all.map(&:name)).to eq([ 'Kobzar', 'Eneida', 'Lord Of The Rings', 'Harry Potter', 'Hobbit' ])
+LibraryBook.all.map(&:name)
+=> [ 'Kobzar', 'Eneida', 'Lord Of The Rings', 'Harry Potter', 'Hobbit' ]
 
 # Query by library
 LibraryBook.query(library: 'Shevchenko').map(&:name)

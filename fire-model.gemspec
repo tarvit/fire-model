@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
     "README.rdoc",
     "Rakefile",
     "VERSION",
+    "fire-model.gemspec",
     "lib/connection/request.rb",
     "lib/connection/response.rb",
     "lib/fire-model.rb",
@@ -35,7 +36,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/tarvit/fire-model"
   s.licenses = ["MIT"]
   s.rubygems_version = "2.2.2"
-  s.summary = "Simple library for Firebase"
+  s.summary = "TODO: Simple library for Firebase"
 
   if s.respond_to? :specification_version then
     s.specification_version = 4

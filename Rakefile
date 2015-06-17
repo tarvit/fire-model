@@ -17,9 +17,9 @@ Jeweler::Tasks.new do |gem|
   gem.name = "fire-model"
   gem.homepage = "http://github.com/tarvit/fire-model"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
-  gem.email = "vitaliyt@interlink-ua.com"
+  gem.summary = %Q{TODO: Simple library for Firebase }
+  gem.description = %Q{TODO: You can define your Firebase models, set collection names, CRUD your data.  }
+  gem.email = "vetal.tarasenko@gmail.com"
   gem.authors = ["Vitaly Tarasenko"]
   # dependencies defined in Gemfile
 end

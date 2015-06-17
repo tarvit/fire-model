@@ -1,13 +1,13 @@
 module Fire
   require 'ostruct'
   require 'active_support'
+  require 'tarvit-helpers'
 
   class Model < OpenStruct
-
+    include TarvitHelpers::NonSharedAccessors
     LEVEL_SEPARATOR = ?/
 
-    cattr_accessor :firebase_path
-    cattr_accessor :global_fire_collection, :global_path_keys
+    non_shared_cattr_accessor :fire_collection, :path_keys
 
     def initialize(attrs={})
       data = self.class.prepare_hash(attrs)
@@ -53,7 +53,7 @@ module Fire
     # Data Methods
 
     def path_values
-      self.class.path_keys.map do |pk|
+      self.class.all_path_keys.map do |pk|
         path_value = send(pk)
         raise PathValueMissingError.new(pk) if path_value.to_s.empty?
         self.class.path_value_param(path_value)
@@ -62,14 +62,14 @@ module Fire
 
     def custom_data(hash=self.data)
       res = hash.to_a.select do |(k, v)|
-        !self.class.path_keys.include?(k)
+        !self.class.all_path_keys.include?(k)
       end
       self.class.prepare_hash(res)
     end
 
     def path_data(hash=self.data)
       res = hash.to_a.select do |(k, v)|
-        self.class.path_keys.include?(k.to_sym)
+        self.class.all_path_keys.include?(k.to_sym)
       end
       self.class.prepare_hash(res)
     end
@@ -99,32 +99,29 @@ module Fire
       # Klass Setters
 
       def in_collection(name)
-        self.global_fire_collection ||= {}
-        self.global_fire_collection[default_collection_name]  = name
+        self.fire_collection = name
       end
 
       def has_path_keys(*keys)
-        self.global_path_keys ||= {}
-        self.global_path_keys[default_collection_name]=keys
+        self.path_keys = keys
       end
 
       # Klass Accessors
 
       def collection_name
-        custom_name = (global_fire_collection && global_fire_collection[default_collection_name])
-        custom_name || default_collection_name
+        self.fire_collection || default_collection_name
       end
 
       def connection
         Fire::Connection::Request.new
       end
 
-      def path_keys
+      def all_path_keys
         own_path_keys + default_path_keys
       end
 
       def own_path_keys
-        (self.global_path_keys || { })[default_collection_name] ||= []
+        self.path_keys || []
       end
 
       # Record Methods

@@ -2,6 +2,7 @@ module Fire
   require 'connection/response'
   require 'connection/request'
   require 'model'
+
   require 'ostruct'
 
   def self.setup(options)

@@ -210,12 +210,6 @@ module Fire
 
     class FireModelError < StandardError; end
 
-    class NoFirebasePathSetError < FireModelError
-      def initialize
-        super 'Firebase path is not set!'
-      end
-    end
-
     class PathValueMissingError < FireModelError
       def initialize(key)
         super "Required path key '#{ key }' is not set!"

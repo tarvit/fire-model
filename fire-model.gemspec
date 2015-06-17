@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.authors = ["Vitaly Tarasenko"]
   s.date = "2015-06-17"
-  s.description = "TODO: You can define your Firebase models, set collection names, CRUD your data.  "
+  s.description = "You can define your Firebase models, set collection names, CRUD your data.  "
   s.email = "vetal.tarasenko@gmail.com"
   s.extra_rdoc_files = [
     "LICENSE.txt",

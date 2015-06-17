@@ -1,6 +1,6 @@
 = fire-model
 
-Description goes here.
+You can define your Firebase models, set collection names, CRUD your data.
 
 == Contributing to fire-model
  

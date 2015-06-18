@@ -7,7 +7,7 @@ module Fire
     include TarvitHelpers::NonSharedAccessors
     LEVEL_SEPARATOR = ?/
 
-    non_shared_cattr_accessor :fire_collection, :path_keys
+    non_shared_cattr_accessor :fire_collection, :path_keys, :id_key_name
 
     def initialize(attrs={})
       data = self.class.prepare_hash(attrs)
@@ -106,6 +106,10 @@ module Fire
         self.path_keys = keys
       end
 
+      def set_id_key(value)
+        self.id_key_name = value
+      end
+
       # Klass Accessors
 
       def collection_name
@@ -190,7 +194,7 @@ module Fire
       end
 
       def id_key
-        :id
+        self.id_key_name || :id
       end
 
       protected

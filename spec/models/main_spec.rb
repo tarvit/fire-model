@@ -178,17 +178,20 @@ describe 'Fire Models' do
 
     context 'Updating' do
 
-      class Point < Fire::Model
-        has_path_keys(:x, :y)
-      end
+      it 'should update data (default ID key)' do
 
-      it 'should update data' do
+        class Point < Fire::Model
+          has_path_keys(:x, :y)
+        end
+
         p1 = Point.create(x: 1, y: 1, value: 1)
         p2 = Point.create(x: 1, y: 2, value: 2)
         p3 = Point.create(x: 2, y: 1, value: 3)
         p4 = Point.create(x: 1, y: 1, value: 4)
 
         expect(Point.all.map(&:value).sort).to eq([ 1, 2, 3, 4 ].sort)
+
+        expect(p1.id).to be
 
         p1.value = 5
         expect(p1.path_changed?).to be_falsey
@@ -214,6 +217,24 @@ describe 'Fire Models' do
         p3.save
 
         expect(Point.all.map(&:value).sort).to eq([ 6, 3, 4].sort)
+      end
+
+      it 'should update data (custom ID key)' do
+        class Point < Fire::Model
+          has_path_keys(:x, :y)
+          set_id_key(:z)
+        end
+
+        p1 = Point.create(x: 1, y: 1, value: 1)
+        expect(p1.z).to be
+        expect(p1.id).to be_nil
+
+        p1.z = 10
+        p1.save
+
+        reloaded_point = Point.take(x: 1, y: 1, z: 10)
+
+        expect(reloaded_point).to eq(p1)
       end
 
     end

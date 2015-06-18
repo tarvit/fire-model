@@ -2,6 +2,7 @@ module Fire
   require 'connection/response'
   require 'connection/request'
   require 'model'
+  require 'nested_model'
 
   require 'ostruct'
 
@@ -17,7 +18,11 @@ module Fire
   end
 
   def self.drop!
-    Fire::Connection::Request.new.delete(?/)
+    connection.delete(?/)
+  end
+
+  def self.connection
+    Fire::Connection::Request.new
   end
 
   private

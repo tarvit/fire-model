@@ -27,13 +27,17 @@ module Fire
       self.class.id_key
     end
 
+    def id_value
+      send(id_key)
+    end
+
     def collection_name
       self.class.collection_name
     end
 
     def save
       self.class.new(@original_data).delete if path_changed?
-      self.class.connection.set(path, self.data)
+      self.class.connection.set(path, self.saving_data)
       @persisted = true
     end
 
@@ -92,6 +96,10 @@ module Fire
 
     def data
       self.to_h
+    end
+
+    def saving_data
+      data
     end
 
     class << self

@@ -1,5 +1,5 @@
 module Fire
-  class Model
+  class NestedModel
     module Parent
       extend ActiveSupport::Concern
 

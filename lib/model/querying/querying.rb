@@ -6,34 +6,15 @@ module Fire
 
       module ClassMethods
         def query(params={}, &filter_condition)
-          path_values, selected_keys = [], []
+          direct_keys = direct_path_keys(params)
+          full_path = ([ collection_name ] + direct_path_values(params, direct_keys)) * LEVEL_SEPARATOR
 
-          own_path_keys.each do |key|
-            if params[key]
-              path_values << path_value_param(params[key])
-              selected_keys << key
-            else
-              break
-            end
-          end
-
-          full_path = ([ collection_name ] + path_values) * LEVEL_SEPARATOR
           response = connection.get(full_path).body
-
           return [] if response.nil?
 
-          result = down_levels(response, (own_path_keys - selected_keys).count)
+          rows = down_levels(response, (own_path_keys - direct_keys).count)
 
-          filter = params.clone
-          selected_keys.each do |sk|
-            filter.delete(sk)
-          end
-
-          result.map{|data| new(data) }.select do |model_object|
-            not_filtered_by_attributes = model_object.has_data?(filter)
-            not_filtered_by_block = block_given? ? filter_condition.(model_object) : true
-            not_filtered_by_attributes && not_filtered_by_block
-          end
+          filter_result(rows, filter_opts(params, direct_keys), filter_condition)
         end
 
         alias_method :all, :query
@@ -46,6 +27,34 @@ module Fire
           end
 
           result
+        end
+
+        def filter_result(rows, filter_opts, filter_condition)
+          rows.map{|data| new(data) }.select do |model_object|
+            not_filtered_by_attributes = model_object.has_data?(filter_opts)
+            not_filtered_by_block = filter_condition ? filter_condition.(model_object) : true
+            not_filtered_by_attributes && not_filtered_by_block
+          end
+        end
+
+        def direct_path_keys(params)
+          res = []
+          own_path_keys.each do |key|
+            params[key] ? (res << key) : break
+          end
+          res
+        end
+
+        def direct_path_values(params, direct_keys)
+          direct_keys.map do |dpk|
+            path_value_param(params[dpk])
+          end
+        end
+
+        def filter_opts(params, direct_keys)
+          direct_keys.each_with_object(params.clone) do |sk, res|
+            res.delete(sk)
+          end
         end
 
       end

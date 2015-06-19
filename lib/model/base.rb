@@ -196,9 +196,9 @@ module Fire
     end
 
     require_relative './querying/querying'
-    require_relative './nested/parent'
     require_relative './nested/nested_model'
+    require_relative './nested/parent'
     include Querying
-    include Parent
+    include NestedModel::Parent
   end
 end

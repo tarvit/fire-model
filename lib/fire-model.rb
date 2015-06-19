@@ -1,7 +1,7 @@
 module Fire
   require 'connection/response'
   require 'connection/request'
-  require 'model/model'
+  require 'model/base'
 
   require 'ostruct'
 

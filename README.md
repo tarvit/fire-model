@@ -93,6 +93,68 @@ Point.all.map(&:value)
 => [ 6, 3, 4]
 ```
 
+Create Nested Models
+```ruby
+class Organization < Fire::Model
+  has_path_keys :country, :state
+  set_id_key(:name)
+end
+
+class Employee < Fire::NestedModel
+  nested_in Organization, folder: 'employees'
+  has_path_keys :department
+end
+
+google = Organization.create(name: 'Google', country: 'USA', state: 'CA')
+apple = Organization.create(name: 'Apple', country: 'USA', state: 'CA')
+
+larry = Employee.create(name: 'Google', country: 'USA', state: 'CA',
+  department: 'HQ', full_name: 'Larry Page', position: 'CEO')
+  
+employee = Organization.query(name: 'Google').first.nested_employees.first
+larry == employee
+=> true
+
+employee.department = 'Research'
+employee.save
+=> true
+  
+tim = apple.add_to_employees(
+  full_name: 'Tim Cook',
+  position: 'CEO',
+  department: 'HQ'
+)
+
+Fire.connection.get(?/).body
+=> {'Organization'=>
+             {'usa'=>
+                  {'ca'=>
+                       {'apple'=>
+                            {'country'=>'USA',
+                             'employees'=>
+                                 {'hq'=>
+                                      {'h543ka'=>
+                                           {'department'=>'HQ',
+                                            'full_name'=>'Tim Cook',
+                                            'id'=>'h543ka',
+                                            'position'=>'CEO'}}},
+                             'name'=>'Apple',
+                             'state'=>'CA'},
+                        'google'=>
+                            {'country'=>'USA',
+                             'employees'=>
+                                 {'research'=>
+                                      {'d23h1a'=>
+                                           {'department'=>'Research',
+                                            'full_name'=>'Larry Page',
+                                            'id'=>'d23h1a',
+                                            'position'=>'CEO'}}},
+                             'name'=>'Google',
+                             'state'=>'CA'}}}}}
+
+
+```
+
 
 **Contributing to fire-model**
  

@@ -1,9 +1,8 @@
 source 'http://rubygems.org'
 ruby '2.0.0'
 
-gem 'tarvit-helpers'
+gem 'tarvit-helpers', '~> 0.0.5'
 gem 'httpclient', '~> 2.6'
-gem 'activesupport', '~> 4.2.2'
 
 group :development do
   gem 'shoulda', '>= 0'

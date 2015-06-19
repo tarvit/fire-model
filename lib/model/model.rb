@@ -189,6 +189,12 @@ module Fire
       end
     end
 
+    class InvalidPathKeyError < FireModelError
+      def initialize(key, message=nil)
+        super (message || "Path key '#{ key }' is invalid")
+      end
+    end
+
     require_relative './querying/querying'
     require_relative './nested/parent'
     require_relative './nested/nested_model'

@@ -10,7 +10,6 @@ describe 'Nested Models' do
     Fire.drop!
   end
 
-
   it 'should declare nested models' do
 
     class Organization < Fire::Model
@@ -113,6 +112,47 @@ describe 'Nested Models' do
                              'name'=>'Google',
                              'state'=>'CA'}}}}}
     )
+  end
+
+  context 'Restrictions' do
+    before :all do
+
+      class Hotel < Fire::Model
+        has_path_keys :location, :class
+        set_id_key(:name)
+      end
+
+    end
+
+    it 'should not allow to set path keys if parent model is not set' do
+      expect(->{
+        class Room < Fire::NestedModel
+          has_path_keys :number
+        end
+      }).to raise_error(Fire::NestedModel::ParentModelNotSetError)
+
+      expect(->{
+        class Room < Fire::NestedModel
+          nested_in Hotel, folder: 'rooms'
+          has_path_keys :number
+        end
+      }).to be
+    end
+
+    it 'should not allow to declare duplicated path keys in nested models' do
+      expect(->{
+        class Room < Fire::NestedModel
+          nested_in Hotel, folder: 'rooms'
+          has_path_keys :number, :class
+        end
+      }).to raise_error(Fire::NestedModel::DuplicatedParentPathKeyError)
+
+      expect(->{
+        class Room < Fire::NestedModel
+          has_path_keys :number, :room_class
+        end
+      }).to be
+    end
   end
 
   def current_data

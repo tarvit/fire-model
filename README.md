@@ -1,4 +1,5 @@
 **fire-model**
+REST wrapper for **Firebase**.
 
 Setup Firebase
 ```ruby

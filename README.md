@@ -101,6 +101,10 @@ larry = Employee.create(name: 'Google', country: 'USA', state: 'CA',
 employee = Organization.query(name: 'Google').first.nested_employees.first
 larry == employee
 => true
+
+employee.department = 'Research'
+employee.save
+=> true
   
 tim = apple.add_to_employees(
   full_name: 'Tim Cook',

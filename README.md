@@ -1,4 +1,4 @@
-**fire-model**
+**fire-model** - 
 REST wrapper for **Firebase**.
 
 Setup Firebase

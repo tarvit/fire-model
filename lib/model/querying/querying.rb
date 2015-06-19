@@ -21,11 +21,8 @@ module Fire
           response = connection.get(full_path).body
 
           return [] if response.nil?
-          result = response.values
 
-          (own_path_keys - selected_keys).count.times do
-            result = result.map(&:values).flatten.compact
-          end
+          result = down_levels(response, (own_path_keys - selected_keys))
 
           filter = params.clone
           selected_keys.each do |sk|
@@ -40,6 +37,19 @@ module Fire
         end
 
         alias_method :all, :query
+
+        private
+
+        def down_levels(root, levels_count)
+          result = root.values
+
+          levels_count.count.times do
+            result = result.map(&:values).flatten.compact
+          end
+
+          result
+        end
+
       end
     end
   end

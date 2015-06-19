@@ -15,6 +15,7 @@ module Fire
       def nested_in(parent, options)
         self.parent = parent
         self.nested_options = OpenStruct.new(options)
+        self.parent.has_nested(self)
       end
 
       def own_path_keys

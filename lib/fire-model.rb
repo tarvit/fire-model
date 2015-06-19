@@ -2,7 +2,6 @@ module Fire
   require 'connection/response'
   require 'connection/request'
   require 'model/model'
-  require 'model/nested_model'
 
   require 'ostruct'
 

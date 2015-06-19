@@ -18,10 +18,14 @@ describe 'Nested Models' do
       set_id_key(:name)
     end
 
+    expect(Organization.nested_models).to be_empty
+
     class Employee < Fire::NestedModel
       nested_in Organization, folder: 'employees'
       has_path_keys :department
     end
+
+    expect(Organization.nested_models).to eq([ Employee ])
 
     google = Organization.create(name: 'Google', country: 'USA', state: 'CA')
     apple = Organization.create(name: 'Apple', country: 'USA', state: 'CA')

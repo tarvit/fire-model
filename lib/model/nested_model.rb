@@ -7,10 +7,6 @@ module Fire
       custom_data.merge(id_key => id_value)
     end
 
-    # def parent
-    #   self.class.nested_options.parent.new(to_h)
-    # end
-
     class << self
       def in_collection(name)
         raise 'can not set a collection for Nested Model'

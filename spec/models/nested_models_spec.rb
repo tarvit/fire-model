@@ -52,7 +52,67 @@ describe 'Nested Models' do
                                         'id' => larry.id,
                                         'full_name' => 'Larry Page',
                                         'position' => 'CEO',
+                                        'department' => 'HQ',
                                     }}}}}}}})
+
+    google = Organization.query(name: 'Google').first
+    google.nested_employees
+
+    employee = google.nested_employees.first
+    expect(larry).to eq(employee)
+
+    employee.department = 'Research'
+    employee.save
+
+    expect(current_data).to eq(
+        {'Organization'=>
+             {'usa'=>
+                  {'ca'=>
+                       {'apple'=>{'country'=>'USA', 'name'=>'Apple', 'state'=>'CA'},
+                        'google'=>{
+                            'country'=>'USA', 'name'=>'Google', 'state'=>'CA', 'employees' => {
+                                'research' => {
+                                    larry.id => {
+                                        'id' => larry.id,
+                                        'full_name' => 'Larry Page',
+                                        'position' => 'CEO',
+                                        'department' => 'Research',
+                                    }}}}}}}})
+
+    apple = Organization.query(name: 'Apple').first
+    tim = apple.add_to_employees(
+      full_name: 'Tim Cook',
+      position: 'CEO',
+      department: 'HQ'
+    )
+
+    expect(current_data).to eq(
+        {'Organization'=>
+             {'usa'=>
+                  {'ca'=>
+                       {'apple'=>
+                            {'country'=>'USA',
+                             'employees'=>
+                                 {'hq'=>
+                                      {tim.id=>
+                                           {'department'=>'HQ',
+                                            'full_name'=>'Tim Cook',
+                                            'id'=>tim.id,
+                                            'position'=>'CEO'}}},
+                             'name'=>'Apple',
+                             'state'=>'CA'},
+                        'google'=>
+                            {'country'=>'USA',
+                             'employees'=>
+                                 {'research'=>
+                                      {larry.id=>
+                                           {'department'=>'Research',
+                                            'full_name'=>'Larry Page',
+                                            'id'=>larry.id,
+                                            'position'=>'CEO'}}},
+                             'name'=>'Google',
+                             'state'=>'CA'}}}}}
+    )
   end
 
   def current_data

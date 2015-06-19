@@ -4,7 +4,11 @@ module Fire
     non_shared_cattr_accessor :parent, :nested_options
 
     def saving_data
-      custom_data.merge(id_key => id_value)
+      res = data.clone
+      self.class.parent.all_path_keys.each do |k|
+        res.delete(k)
+      end
+      res
     end
 
     class << self
@@ -19,7 +23,7 @@ module Fire
       end
 
       def own_path_keys
-        parent.all_path_keys + [nested_options.folder].compact + super()
+        parent.all_path_keys + [ nested_options.folder ] + super()
       end
 
       def collection_name

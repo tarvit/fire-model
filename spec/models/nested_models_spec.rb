@@ -20,7 +20,7 @@ describe 'Nested Models' do
     expect(Organization.nested_models).to be_empty
 
     class Employee < Fire::NestedModel
-      nested_in Organization, folder: 'employees'
+      nested_in Organization
       has_path_keys :department
     end
 
@@ -115,7 +115,7 @@ describe 'Nested Models' do
   end
 
   context 'Restrictions' do
-    before :all do
+    before :each do
 
       class Hotel < Fire::Model
         has_path_keys :location, :class
@@ -128,6 +128,7 @@ describe 'Nested Models' do
       expect(->{
         class Room < Fire::NestedModel
           has_path_keys :number
+          nested_in Hotel, folder: 'rooms'
         end
       }).to raise_error(Fire::NestedModel::ParentModelNotSetError)
 
@@ -149,6 +150,7 @@ describe 'Nested Models' do
 
       expect(->{
         class Room < Fire::NestedModel
+          nested_in Hotel, folder: 'rooms'
           has_path_keys :number, :room_class
         end
       }).to be

@@ -24,24 +24,28 @@ module Fire
         end
       end
 
-      def nested_in(parent, options)
+      def nested_in(parent, options={})
         self.parent = parent
         self.nested_options = OpenStruct.new(options)
         self.parent.has_nested(self)
       end
 
       def own_path_keys
-        parent.all_path_keys + [ nested_options.folder ] + super()
+        parent.all_path_keys + [ folder ] + super()
       end
 
       def collection_name
         parent.collection_name
       end
+
+      def folder
+        path_value_param(self.nested_options.folder ? self.nested_options.folder : to_s.pluralize)
+      end
     end
 
     def method_missing(*args)
-      if args.first.to_s == self.class.nested_options.folder
-        self.class.nested_options.folder
+      if args.first.to_s == self.class.folder
+        self.class.folder
       else
         super
       end

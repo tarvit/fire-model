@@ -13,9 +13,9 @@ module Fire
           self.assigned_nested_models ||= []
           self.assigned_nested_models << nested_model
 
-          folder = nested_model.nested_options.folder
+          folder = nested_model.folder
           define_method "nested_#{folder}" do
-            objects = self.class.down_levels(send(folder), nested_model.path_keys.count)
+            objects = self.class.down_levels(send(folder), (nested_model.path_keys || []).count)
             objects.map{|x|
               full_data = x.merge(self.path_data)
               nested_model.new(full_data)

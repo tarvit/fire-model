@@ -55,6 +55,14 @@ module Fire
         }
       end
 
+      def query(params={}, &filter_condition)
+        raise QueryingNotSupportedError.new
+      end
+
+      def all
+        query
+      end
+
       protected
 
       def default_folder_name
@@ -86,6 +94,12 @@ module Fire
     class CollectionIsSetError < FireModelError
       def initialize(nested_model)
         super("Nested Model '#{nested_model}' can not have own Collection. It is extended from Parent Model '#{nested_model.parent}'")
+      end
+    end
+
+    class QueryingNotSupportedError < FireModelError
+      def initialize
+        super("Nested Models do not support querying")
       end
     end
 

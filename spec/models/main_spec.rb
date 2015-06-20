@@ -146,7 +146,7 @@ describe 'Fire Models' do
           has_path_keys(:library, :floor, :row_number, :shelf)
         end
 
-        LibraryBook.create(library: 'Shevchenko', floor: 1, row_number: 1, shelf: 10, name: 'Kobzar', author: 'T.G. Shevchenko')
+        book = LibraryBook.create(library: 'Shevchenko', floor: 1, row_number: 1, shelf: 10, name: 'Kobzar', author: 'T.G. Shevchenko')
         LibraryBook.create(library: 'Shevchenko', floor: 1, row_number: 1, shelf: 15, name: 'Eneida', author: 'I. Kotlyrevskiy')
         LibraryBook.create(library: 'Shevchenko', floor: 2, row_number: 15, shelf: 115, name: 'Lord Of The Rings', author: ' J.R.R. Tolkien')
         LibraryBook.create(library: 'Skovoroda', floor: 1, row_number: 25, shelf: 34, name: 'Harry Potter', author: 'J.K. Rowling')
@@ -172,6 +172,12 @@ describe 'Fire Models' do
 
         # Query by math condition
         expect(LibraryBook.query{|m| m.row_number % 5 == 0  }.map(&:name)).to eq([ 'Lord Of The Rings', 'Harry Potter' ])
+
+        # Query by full path
+        expect(LibraryBook.query(library: 'Shevchenko', floor: 1, row_number: 1, shelf: 10).map(&:name)).to eq([ 'Kobzar' ])
+
+        # Take by full path + ID
+        expect(LibraryBook.take(library: 'Shevchenko', floor: 1, row_number: 1, shelf: 10, id: book.id).name).to eq('Kobzar')
       end
 
     end

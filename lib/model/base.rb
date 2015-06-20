@@ -57,6 +57,7 @@ module Fire
     def reload
       loaded_data = self.class.take(path_data).data
       @table = loaded_data
+      @cache = {}
       self
     end
 
@@ -111,6 +112,11 @@ module Fire
 
     def saving_data
       data
+    end
+
+    def cache(key, &value)
+      @cache ||= {}
+      @cache[key] ||= value.call
     end
 
     class << self

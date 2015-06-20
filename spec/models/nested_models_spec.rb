@@ -156,6 +156,16 @@ describe 'Nested Models' do
                                  'id'=>zaporozhets.id,
                                  'manufacturer'=>'Zaporozhets',
                                  'model'=>'ZAZ-965'}}}}}})
+
+        # nested association caching
+        zaporozhets.nested_engine.code = 'MeMZ-777'
+        expect(zaporozhets.nested_engine.code).to eq('MeMZ-777')
+        expect(zaporozhets.reload.nested_engine.code).to eq('MeMZ-966')
+
+        # nested association saving
+        zap2 = Car.take(manufacturer: 'Zaporozhets', model: 'ZAZ-965', car_class: 'Mini', id: car.id)
+        zap2.nested_engine.update(code: 'MeMZ-555')
+        expect(zaporozhets.nested_engine.reload.code).to eq('MeMZ-555')
       end
 
       it 'should allow to declare nested models with all *parent values* duplicated' do

@@ -15,7 +15,9 @@ module Fire
 
           folder = nested_model.folder
           define_method "nested_#{folder}" do
-            nested_model.folder_content(self)
+            self.cache(folder) do
+              nested_model.folder_content(self)
+            end
           end
 
           define_method "add_to_#{folder}" do |object|

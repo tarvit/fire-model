@@ -60,6 +60,11 @@ module Fire
       self
     end
 
+    def update(attrs)
+      @table.merge!(attrs)
+      save
+    end
+
     # Data Methods
 
     def path_values

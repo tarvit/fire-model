@@ -210,7 +210,7 @@ describe 'Fire Models' do
         expect(Point.all.map(&:value).sort).to eq([ 5, 2, 3, 4 ].sort)
 
         reloaded_point = Point.take(x: p2.x, y: p2.y, id: p2.id)
-        reloaded_point.value = 6
+        reloaded_point.update(value: 6)
 
         expect(reloaded_point.path_changed?).to be_falsey
 
@@ -221,8 +221,6 @@ describe 'Fire Models' do
         expect(p2.value).to eq(2)
         p2.reload
         expect(p2.value).to eq(6)
-
-
 
         # Deletion
         p1.delete

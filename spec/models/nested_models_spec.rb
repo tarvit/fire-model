@@ -60,14 +60,11 @@ describe 'Nested Models' do
                                           'department' => 'HQ',
                                       }}}}}}}})
 
-      google = Organization.query(name: 'Google').first
-      google.nested_employees
 
-      employee = google.nested_employees.first
+      employee = google.reload.nested_employees.first
       expect(larry).to eq(employee)
 
-      employee.department = 'Research'
-      employee.save
+      employee.update(department: 'Research')
 
       expect(current_data).to eq(
           {'Organization'=>
@@ -84,7 +81,6 @@ describe 'Nested Models' do
                                           'department' => 'Research',
                                       }}}}}}}})
 
-      apple = Organization.query(name: 'Apple').first
       tim = apple.add_to_employees(
         full_name: 'Tim Cook',
         position: 'CEO',
@@ -178,8 +174,8 @@ describe 'Nested Models' do
         house.add_to_rooms(floor: 200, number: '1A')
         house.add_to_rooms(floor: 150, number: '2A')
 
-        house = House.query(house_number: '53101').first
-        rooms = house.nested_rooms
+
+        rooms = house.reload.nested_rooms
         expect(rooms.map(&:number).sort).to eq(%w{ 1A 2A }.sort)
 
         expect(current_data).to eq(

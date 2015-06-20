@@ -15,11 +15,7 @@ module Fire
 
           folder = nested_model.folder
           define_method "nested_#{folder}" do
-            objects = self.class.down_levels(send(folder), (nested_model.path_keys || []).count)
-            objects.map{|x|
-              full_data = x.merge(self.path_data)
-              nested_model.new(full_data)
-            }
+            nested_model.folder_content(self)
           end
 
           define_method "add_to_#{folder}" do |object|

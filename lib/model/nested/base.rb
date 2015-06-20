@@ -43,13 +43,22 @@ module Fire
       end
 
       def folder
-        path_value_param(self.nested_options.folder ? self.nested_options.folder : to_s.pluralize)
+        path_value_param(self.nested_options.folder ? self.nested_options.folder : default_folder_name)
+      end
+
+      def folder_content(parent)
+        levels_count = (path_keys || []).count
+        objects = self.down_levels(parent.send(folder), levels_count)
+        objects.map{|x|
+          full_data = x.merge(parent.path_data)
+          new(full_data)
+        }
       end
 
       protected
 
-      def default_path_keys
-        self.nested_options.single ? [] : super()
+      def default_folder_name
+        name.pluralize
       end
     end
 

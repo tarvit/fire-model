@@ -114,6 +114,50 @@ describe 'Nested Models' do
     )
   end
 
+  context 'Nested Models Types' do
+
+    it 'should declare single nested models' do
+
+      class Car < Fire::Model
+        has_path_keys :manufacturer, :model, :car_class
+      end
+
+      class Engine < Fire::SingleNestedModel
+        nested_in Car
+      end
+
+      scirocco = Car.create(manufacturer: 'Volkswagen', model: 'Scirocco', car_class: 'Sport compact')
+      scirocco.add_to_engine(code: 'I4 turbo', power: '122 PS')
+
+      car = Car.create(manufacturer: 'Zaporozhets', model: 'ZAZ-965', car_class: 'Mini', engine: { code: 'MeMZ-966' })
+
+      zaporozhets = Car.take(manufacturer: 'Zaporozhets', model: 'ZAZ-965', car_class: 'Mini', id: car.id)
+      expect(zaporozhets.nested_engine.code).to eq('MeMZ-966')
+
+      expect(current_data).to eq({
+        'Car'=>
+          {'volkswagen'=>
+               {'scirocco'=>
+                    {'sport-compact'=>
+                         {scirocco.id=>
+                              {'''car_class'=>'Sport compact',
+                               'engine'=>{'code'=>'I4 turbo', 'power'=>'122 PS'},
+                               'id'=>scirocco.id,
+                               'manufacturer'=>'Volkswagen',
+                               'model'=>'Scirocco'}}}},
+           'zaporozhets'=>
+               {'zaz-965'=>
+                    {'mini'=>
+                         {zaporozhets.id=>
+                              {'car_class'=>'Mini',
+                               'engine'=>{'code'=>'MeMZ-966'},
+                               'id'=>zaporozhets.id,
+                               'manufacturer'=>'Zaporozhets',
+                               'model'=>'ZAZ-965'}}}}}})
+    end
+
+  end
+
   context 'Restrictions' do
     before :each do
 
@@ -154,6 +198,19 @@ describe 'Nested Models' do
           has_path_keys :number, :room_class
         end
       }).to be
+    end
+
+    it 'should not allow to declare own path keys in single nested models' do
+      expect(->{
+        class Earth < Fire::Model
+
+        end
+
+        class Moon < Fire::SingleNestedModel
+          nested_in Earth
+          has_path_keys :planet
+        end
+      }).to raise_error(Fire::SingleNestedModel::PathKeysNotSupported)
     end
   end
 

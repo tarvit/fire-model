@@ -156,6 +156,56 @@ describe 'Nested Models' do
                                'model'=>'ZAZ-965'}}}}}})
     end
 
+    it 'should allow to declare nested models with all *parent values* duplicated' do
+      class House < Fire::Model
+        has_path_keys :country, :city, :street
+        set_id_key(:house_number)
+      end
+
+      class Room < Fire::NestedModel
+        nested_in House, parent_values: true
+        set_id_key(:number)
+        has_path_keys :floor
+      end
+
+      house = House.create(country: 'Ukraine', city: 'Kyiv', street: 'Shevchenko Ave.', house_number: '53101')
+      house.add_to_rooms(floor: 200, number: '1A')
+      house.add_to_rooms(floor: 150, number: '2A')
+
+      house = House.query(house_number: '53101').first
+      rooms = house.nested_rooms
+      expect(rooms.map(&:number).sort).to eq(%w{ 1A 2A }.sort)
+
+      expect(current_data).to eq(
+        {'House'=>
+            {'ukraine'=>
+                 {'kyiv'=>
+                      {'shevchenko-ave'=>
+                           {'53101'=>
+                                {'city'=>'Kyiv',
+                                 'country'=>'Ukraine',
+                                 'house_number'=>'53101',
+                                 'rooms'=>
+                                     {'150_'=>
+                                          {'2a'=>
+                                               {'city'=>'Kyiv',
+                                                'country'=>'Ukraine',
+                                                'floor'=>150,
+                                                'number'=>'2A',
+                                                'house_number'=>'53101',
+                                                'street'=>'Shevchenko Ave.'}},
+                                      '200_'=>
+                                          {'1a'=>
+                                               {'city'=>'Kyiv',
+                                                'country'=>'Ukraine',
+                                                'floor'=>200,
+                                                'number'=>'1A',
+                                                'house_number'=>'53101',
+                                                'street'=>'Shevchenko Ave.'}}},
+                                 'street'=>'Shevchenko Ave.'}}}}}})
+
+    end
+
   end
 
   context 'Restrictions' do

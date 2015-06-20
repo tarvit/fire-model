@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Vitaly Tarasenko"]
-  s.date = "2015-06-19"
+  s.date = "2015-06-20"
   s.description = "You can define your Firebase models, set collection names, CRUD your data.  "
   s.email = "vetal.tarasenko@gmail.com"
   s.extra_rdoc_files = [
@@ -30,8 +30,9 @@ Gem::Specification.new do |s|
     "lib/connection/response.rb",
     "lib/fire-model.rb",
     "lib/model/base.rb",
-    "lib/model/nested/nested_model.rb",
+    "lib/model/nested/base.rb",
     "lib/model/nested/parent.rb",
+    "lib/model/nested/single.rb",
     "lib/model/querying/querying.rb",
     "spec/models/main_spec.rb",
     "spec/models/nested_models_spec.rb",

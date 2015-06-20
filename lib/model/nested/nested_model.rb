@@ -4,11 +4,15 @@ module Fire
     non_shared_cattr_accessor :parent, :nested_options
 
     def saving_data
-      res = data.clone
-      self.class.parent.all_path_keys.each do |k|
+      return super() if nested_options.parent_values
+
+      self.class.parent.all_path_keys.each_with_object( data.clone) do |k, res|
         res.delete(k)
       end
-      res
+    end
+
+    def nested_options
+      self.class.nested_options
     end
 
     class << self
@@ -40,6 +44,12 @@ module Fire
 
       def folder
         path_value_param(self.nested_options.folder ? self.nested_options.folder : to_s.pluralize)
+      end
+
+      protected
+
+      def default_path_keys
+        self.nested_options.single ? [] : super()
       end
     end
 

@@ -9,7 +9,8 @@ module Fire
       end
 
       def folder_content(parent)
-        new(parent.send(folder).merge(parent.path_data))
+        object = parent.send(folder) || {}
+        new(object.merge(parent.path_data))
       end
 
       protected

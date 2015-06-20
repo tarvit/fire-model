@@ -12,7 +12,8 @@ module Fire
           response = connection.get(full_path).body
           return [] if response.nil?
 
-          rows = down_levels(response, (own_path_keys - direct_keys).count)
+          needed_levels = (all_path_keys - direct_keys - default_path_keys).count
+          rows = down_levels(response, needed_levels)
 
           filter_result(rows, filter_opts(params, direct_keys), filter_condition)
         end

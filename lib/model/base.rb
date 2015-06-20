@@ -54,6 +54,12 @@ module Fire
       ([ collection_name ] + path_values) * LEVEL_SEPARATOR
     end
 
+    def reload
+      loaded_data = self.class.take(path_data).data
+      @table = loaded_data
+      self
+    end
+
     # Data Methods
 
     def path_values

@@ -190,6 +190,7 @@ describe 'Fire Models' do
           has_path_keys(:x, :y)
         end
 
+        # Creating
         p1 = Point.create(x: 1, y: 1, value: 1)
         p2 = Point.create(x: 1, y: 2, value: 2)
         p3 = Point.create(x: 2, y: 1, value: 3)
@@ -197,11 +198,14 @@ describe 'Fire Models' do
 
         expect(Point.all.map(&:value).sort).to eq([ 1, 2, 3, 4 ].sort)
 
+        # ID generation
         expect(p1.id).to be
 
+        # Updating
         p1.value = 5
         expect(p1.path_changed?).to be_falsey
         p1.save
+
 
         expect(Point.all.map(&:value).sort).to eq([ 5, 2, 3, 4 ].sort)
 
@@ -211,9 +215,16 @@ describe 'Fire Models' do
         expect(reloaded_point.path_changed?).to be_falsey
 
         reloaded_point.save
-
         expect(Point.all.map(&:value).sort).to eq([ 5, 6, 3, 4 ].sort)
 
+        # Reloading
+        expect(p2.value).to eq(2)
+        p2.reload
+        expect(p2.value).to eq(6)
+
+
+
+        # Deletion
         p1.delete
 
         expect(Point.all.map(&:value).sort).to eq([ 6, 3, 4].sort)

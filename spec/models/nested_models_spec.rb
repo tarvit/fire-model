@@ -220,14 +220,14 @@ describe 'Nested Models' do
 
     it 'should not allow to set path keys if parent model is not set' do
       expect(->{
-        class Room < Fire::NestedModel
+        class HotelRoom < Fire::NestedModel
           has_path_keys :number
           nested_in Hotel, folder: 'rooms'
         end
       }).to raise_error(Fire::NestedModel::ParentModelNotSetError)
 
       expect(->{
-        class Room < Fire::NestedModel
+        class HotelRoom < Fire::NestedModel
           nested_in Hotel, folder: 'rooms'
           has_path_keys :number
         end
@@ -236,14 +236,14 @@ describe 'Nested Models' do
 
     it 'should not allow to declare duplicated path keys in nested models' do
       expect(->{
-        class Room < Fire::NestedModel
+        class HotelRoom < Fire::NestedModel
           nested_in Hotel, folder: 'rooms'
           has_path_keys :number, :class
         end
       }).to raise_error(Fire::NestedModel::DuplicatedParentPathKeyError)
 
       expect(->{
-        class Room < Fire::NestedModel
+        class HotelRoom < Fire::NestedModel
           nested_in Hotel, folder: 'rooms'
           has_path_keys :number, :room_class
         end

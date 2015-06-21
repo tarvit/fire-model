@@ -6,6 +6,7 @@ module Fire
 
       def initialize
         @client = HTTPClient.new(base_url: Fire.config.base_uri)
+        @client.connect_timeout = Fire.config.timeout || 120
         @client.default_header['Content-Type'] = 'application/json'
       end
 
@@ -31,9 +32,15 @@ METHOD
 
       protected
 
-      def process(method, path, query={}, body=nil)
-        response = @client.request(method, "#{path}.json", body: body, query: prepare_options(query), follow_redirect: true)
-        Fire::Connection::Response.new(response)
+      def process(method, path, query={}, body=nil, tries=5)
+        raise 'Firebase Connection Failed' if tries.zero?
+        begin
+          response = @client.request(method, "#{path}.json", body: body, query: prepare_options(query), follow_redirect: true)
+          Fire::Connection::Response.new(response)
+        rescue HTTPClient::ConnectTimeoutError
+          puts 'Firebase Connection Timed out.'
+          return process(method, path, query, body, tries-1)
+        end
       end
 
       def prepare_options(query_options)

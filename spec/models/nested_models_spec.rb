@@ -13,7 +13,7 @@ describe 'Nested Models' do
     end
 
     def current_data
-      Fire.connection.get(?/).body
+      Fire.tree
     end
 
     it 'should declare nested models' do
@@ -142,7 +142,7 @@ describe 'Nested Models' do
                  {'scirocco'=>
                       {'sport-compact'=>
                            {scirocco.id=>
-                                {'''car_class'=>'Sport compact',
+                                {'car_class'=>'Sport compact',
                                  'engine'=>{'code'=>'I4 turbo', 'power'=>'122 PS'},
                                  'id'=>scirocco.id,
                                  'manufacturer'=>'Volkswagen',

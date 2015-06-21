@@ -20,6 +20,10 @@ module Fire
     connection.delete(?/)
   end
 
+  def self.tree
+    connection.get(?/).body
+  end
+
   def self.connection
     Fire::Connection::Request.new
   end

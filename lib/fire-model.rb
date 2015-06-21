@@ -4,6 +4,7 @@ module Fire
   require 'model/base'
 
   require 'ostruct'
+  ROOT = ?/
 
   def self.setup(options)
     configuration = {}
@@ -12,20 +13,28 @@ module Fire
     @config = OpenStruct.new(configuration)
   end
 
-  def self.config
-    @config
-  end
+  class << self
 
-  def self.drop!
-    connection.delete(?/)
-  end
+    def config
+      @config
+    end
 
-  def self.tree
-    connection.get(?/).body
-  end
+    def connection
+      Fire::Connection::Request.new
+    end
 
-  def self.connection
-    Fire::Connection::Request.new
+    def drop!
+      connection.delete(ROOT)
+    end
+
+    def tree
+      connection.get(ROOT).body
+    end
+
+    def reset_tree!(data=nil)
+      connection.set(ROOT, data)
+    end
+
   end
 
   private

@@ -62,8 +62,12 @@ module Fire
     end
 
     def update(attrs)
-      @table.merge!(attrs)
+      set(attrs)
       save
+    end
+
+    def set(attrs)
+      @table.merge!(attrs)
     end
 
     # Data Methods

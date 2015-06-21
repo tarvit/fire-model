@@ -3,12 +3,26 @@ module Fire
   class NestedModel < Model
     non_shared_cattr_accessor :parent, :nested_options
 
+    def initialize(hash, parent_original={})
+      @parent_original = parent_original
+      super(hash)
+    end
+
+    def sync_parent
+      @parent_original.merge!(saving_data)
+    end
+
     def saving_data
       return super() if nested_options.parent_values
 
-      self.class.parent.all_path_keys.each_with_object( data.clone) do |k, res|
+      self.class.parent.all_path_keys.each_with_object(data.clone) do |k, res|
         res.delete(k)
       end
+    end
+
+    def save
+      sync_parent
+      super
     end
 
     def nested_options
@@ -48,10 +62,11 @@ module Fire
 
       def folder_content(parent)
         levels_count = (path_keys || []).count
-        objects = self.down_levels(parent.send(folder), levels_count)
-        objects.map{|x|
-          full_data = x.merge(parent.path_data)
-          new(full_data)
+        nested_folder = parent.send(folder) || {}
+        objects = self.down_levels(nested_folder, levels_count)
+        objects.map{|parent_original|
+          full_data = parent_original.clone.merge(parent.path_data)
+          new(full_data, parent_original)
         }
       end
 

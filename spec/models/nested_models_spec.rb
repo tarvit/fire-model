@@ -114,6 +114,42 @@ describe 'Nested Models' do
                                'name'=>'Google',
                                'state'=>'CA'}}}}}
       )
+
+      employee = google.reload.nested_employees.first
+
+      employee.full_name = 'Sergey Brin'
+      employee.position = 'CEO'
+
+      google.save
+
+      expect(current_data).to eq(
+          {'Organization'=>
+               {'usa'=>
+                    {'ca'=>
+                         {'apple'=>
+                              {'country'=>'USA',
+                               'employees'=>
+                                   {'hq'=>
+                                        {tim.id=>
+                                             {'department'=>'HQ',
+                                              'full_name'=>'Tim Cook',
+                                              'id'=>tim.id,
+                                              'position'=>'CEO'}}},
+                               'name'=>'Apple',
+                               'state'=>'CA'},
+                          'google'=>
+                              {'country'=>'USA',
+                               'employees'=>
+                                   {'research'=>
+                                        {larry.id=>
+                                             {'department'=>'Research',
+                                              'full_name'=>'Sergey Brin',
+                                              'id'=>larry.id,
+                                              'position'=>'CEO'}}},
+                               'name'=>'Google',
+                               'state'=>'CA'}}}}}
+      )
+
     end
 
     context 'Nested Models Types' do
@@ -162,10 +198,18 @@ describe 'Nested Models' do
         expect(zaporozhets.nested_engine.code).to eq('MeMZ-777')
         expect(zaporozhets.reload.nested_engine.code).to eq('MeMZ-966')
 
+
         # nested association saving
         zap2 = Car.take(manufacturer: 'Zaporozhets', model: 'ZAZ-965', car_class: 'Mini', id: car.id)
         zap2.nested_engine.update(code: 'MeMZ-555')
         expect(zaporozhets.nested_engine.reload.code).to eq('MeMZ-555')
+
+        # saving nested models with a parent
+        zap3 = Car.take(manufacturer: 'Zaporozhets', model: 'ZAZ-965', car_class: 'Mini', id: car.id)
+        zap3.nested_engine.code = 'MeMZ-1111'
+
+        zap3.save
+        expect(zap3.reload.nested_engine.code).to eq('MeMZ-1111')
       end
 
       it 'should allow to declare nested models with all *parent values* duplicated' do

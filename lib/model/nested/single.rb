@@ -9,8 +9,9 @@ module Fire
       end
 
       def folder_content(parent)
-        object = parent.send(folder) || {}
-        new(object.merge(parent.path_data))
+        init_empty_parent_object(parent)
+        parent_original = parent.send(folder)
+        new(parent_original.clone.merge(parent.path_data), parent_original)
       end
 
       protected
@@ -21,6 +22,12 @@ module Fire
 
       def default_folder_name
         name
+      end
+
+      def init_empty_parent_object(parent)
+        unless parent.send(folder)
+          parent.send("#{folder}=", {})
+        end
       end
 
     end

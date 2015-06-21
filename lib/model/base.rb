@@ -110,10 +110,6 @@ module Fire
       self.to_h
     end
 
-    def saving_data
-      data
-    end
-
     def cache(key, &value)
       @cache ||= {}
       @cache[key] ||= value.call
@@ -215,10 +211,12 @@ module Fire
     require_relative './querying/querying'
     include Querying
 
+    require_relative './nested/parent'
+    include NestedParent
+
     require_relative './nested/base'
     require_relative './nested/single'
-    require_relative './nested/parent'
 
-    include NestedModel::Parent
   end
+
 end

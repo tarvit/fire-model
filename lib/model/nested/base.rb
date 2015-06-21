@@ -3,7 +3,7 @@ module Fire
   class NestedModel < Model
     non_shared_cattr_accessor :parent, :nested_options
 
-    def initialize(hash, parent_original={})
+    def initialize(hash={}, parent_original={})
       @parent_original = parent_original
       super(hash)
     end

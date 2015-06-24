@@ -7,6 +7,7 @@ gem install fire-model
 
 Setup Firebase. (If you are using Rails create a file `Rails.root/config/initializers/fire_model.rb` and put next line there)
 ```ruby
+require 'fire-model'
 Fire.setup(firebase_path: 'https://some-test-777.firebaseio.com')
 ```
 
@@ -180,7 +181,8 @@ car = Car.create(manufacturer: 'Zaporozhets', model: 'ZAZ-965', car_class: 'Mini
   engine: { code: 'MeMZ-966' })
 
 zaporozhets = Car.take(manufacturer: 'Zaporozhets', model: 'ZAZ-965', car_class: 'Mini', id: car.id)
-expect(zaporozhets.nested_engine.code).to eq('MeMZ-966')
+zaporozhets.nested_engine.code
+=> 'MeMZ-966'
 
 Fire.tree
 => {
@@ -231,7 +233,8 @@ house.add_to_rooms(floor: 150, number: '2A')
 
 
 rooms = house.reload.nested_rooms
-expect(rooms.map(&:number).sort).to eq(%w{ 1A 2A }.sort)
+rooms.map(&:number)
+=> [ '1A', '2A' ]
 
 Fire.tree
 =>  {'House'=>

@@ -1,7 +1,11 @@
 # fire-model - REST wrapper for Firebase.
 
+Install gem
+```
+gem install fire-model
+```
 
-Setup Firebase
+Setup Firebase. (If you are using Rails create a file `Rails.root/initalizers/fire_model.rb` and put next line there)
 ```ruby
 Fire.setup(firebase_path: 'https://some-test-777.firebaseio.com')
 ```

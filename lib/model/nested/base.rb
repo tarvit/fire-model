@@ -29,6 +29,16 @@ module Fire
       self.class.nested_options
     end
 
+    def self.id_key
+      self.id_key_name || "#{self.name.demodulize.singularize.dasherize.downcase}_id".to_sym
+    end
+
+    def set_id_key(value)
+      raise ParentModelNotSetError.new(self) unless self.parent
+      validate_id_key!
+      super(value)
+    end
+
     class << self
       def in_collection(name)
         raise CollectionIsSetError.new(self)
@@ -46,6 +56,7 @@ module Fire
         self.parent = parent
         self.nested_options = OpenStruct.new(options)
         self.parent.has_nested(self)
+        validate_id_key!
       end
 
       def own_path_keys
@@ -81,7 +92,11 @@ module Fire
       protected
 
       def default_folder_name
-        name.pluralize
+        name.demodulize.pluralize.dasherize
+      end
+
+      def validate_id_key!
+        raise DuplicatedIdKeyError.new(self.id_key, self.parent) if self.parent.all_path_keys.include?(id_key)
       end
     end
 
@@ -95,9 +110,21 @@ module Fire
 
     class DuplicatedParentPathKeyError < InvalidPathKeyError
       def initialize(key, parent)
-        message = "Key '#{key}' is duplicated in a Parent Model '#{parent}'"
+        message = error_message(key, parent)
         super(key, message)
       end
+
+      def error_message(key, parent)
+        "Key '#{key}' is duplicated in a Parent Model '#{parent}'"
+      end
+    end
+
+    class DuplicatedIdKeyError < DuplicatedParentPathKeyError
+
+      def error_message(key, parent)
+        "ID Key '#{key}' is duplicated in a Parent Model '#{parent}'. Use 'set_key_id' method to define a specific ID Key"
+      end
+
     end
 
     class ParentModelNotSetError < FireModelError

@@ -106,8 +106,8 @@ Point.all.map(&:value)
 Create Nested Models
 ```ruby
 class Organization < Fire::Model
-  has_path_keys :country, :state
   set_id_key(:name)
+  has_path_keys :country, :state
 end
 
 class Employee < Fire::NestedModel
@@ -215,13 +215,13 @@ zaporozhets.nested_engine.reload.code
 Nested Models with Parent`s values
 ```ruby
 class House < Fire::Model
-  has_path_keys :country, :city, :street
   set_id_key(:house_number)
+  has_path_keys :country, :city, :street
 end
 
 class Room < Fire::NestedModel
-  nested_in House, parent_values: true
   set_id_key(:number)
+  nested_in House, parent_values: true
   has_path_keys :floor
 end
 

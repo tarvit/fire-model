@@ -26,6 +26,7 @@ describe 'Nested Models' do
       expect(Organization.nested_models).to be_empty
 
       class Employee < Fire::NestedModel
+        set_id_key(:id)
         nested_in Organization
         has_path_keys :department
       end
@@ -161,6 +162,7 @@ describe 'Nested Models' do
         end
 
         class Engine < Fire::SingleNestedModel
+
           nested_in Car
         end
 
@@ -263,6 +265,32 @@ describe 'Nested Models' do
       end
 
     end
+  end
+
+  context 'Relations' do
+
+    before :all do
+      class Post < Fire::Model
+        has_path_keys :category
+
+        class Comment < Fire::NestedModel
+          nested_in Post
+        end
+      end
+    end
+
+    it 'should be associated' do
+      expect(Post.id_key).to eq(:id)
+      expect(Post::Comment.id_key).to eq(:comment_id)
+      expect(Post::Comment.folder).to eq('comments')
+
+      post = Post.create(category: 'default')
+      post.add_to_comments(text: 'hello')
+      post.add_to_comments(text: 'hey')
+
+      expect(post.reload.nested_comments.map(&:text).sort).to eq(%w{ hello hey }.sort)
+    end
+
   end
 
   context 'Restrictions' do

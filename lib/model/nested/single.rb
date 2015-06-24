@@ -14,6 +14,14 @@ module Fire
         new(parent_original.clone.merge(parent.path_data), parent_original)
       end
 
+      def id_key
+        parent.id_key
+      end
+
+      def set_id_key(value)
+        raise IdKeyNotSupported.new(self)
+      end
+
       protected
 
       def default_path_keys
@@ -30,6 +38,16 @@ module Fire
         end
       end
 
+      def validate_id_key!
+        true
+      end
+
+    end
+
+    class IdKeyNotSupported < FireModelError
+      def initialize(single_nested_model)
+        super("Single Model #{single_nested_model} don't support own ID key.")
+      end
     end
 
     class PathKeysNotSupported < FireModelError

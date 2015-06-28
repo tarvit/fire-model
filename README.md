@@ -1,4 +1,5 @@
 # fire-model - REST wrapper for Firebase.
+[![Gem Version](https://badge.fury.io/rb/fire-model.svg)](http://badge.fury.io/rb/fire-model)
 
 Install gem
 ```

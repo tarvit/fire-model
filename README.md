@@ -5,11 +5,12 @@ Install gem
 ```
 gem install fire-model
 ```
+Click [here](https://www.firebase.com/signup/) to create a free Firebase account if you don't have one.
 
-Setup Firebase. (If you are using Rails create a file `Rails.root/config/initializers/fire_model.rb` and put next line there)
+Setup Firebase. (If you are using Rails create a file `Rails.root/config/initializers/fire_model.rb` and put next line there).
 ```ruby
 require 'fire-model'
-Fire.setup(firebase_path: 'https://some-test-777.firebaseio.com')
+Fire.setup(firebase_path: 'https://<your subdomain here>.firebaseio.com')
 ```
 
 Declare your Model

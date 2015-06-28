@@ -11,6 +11,7 @@ RSpec.configure do |config|
 
   config.before :all do
     Fire.setup(firebase_path: ENV['TEST_FIREBASE_URL'])
+    Fire.logger.level = Logger::INFO
   end
 
 end

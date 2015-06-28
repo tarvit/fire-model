@@ -35,10 +35,11 @@ METHOD
       def process(method, path, query={}, body=nil, tries=5)
         raise 'Firebase Connection Failed' if tries.zero?
         begin
-          response = @client.request(method, "#{path}.json", body: body, query: prepare_options(query), follow_redirect: true)
-          Fire::Connection::Response.new(response)
+          Fire.logger.request(method, path)
+          raw_response = @client.request(method, "#{path}.json", body: body, query: prepare_options(query), follow_redirect: true)
+          Fire::Connection::Response.new(raw_response, path)
         rescue HTTPClient::ConnectTimeoutError
-          puts 'Firebase Connection Timed out.'
+          Fire.logger.timed_out(method, path)
           return process(method, path, query, body, tries-1)
         end
       end

@@ -3,20 +3,32 @@ module Fire
   require 'connection/request'
   require 'model/base'
 
+  require 'support/fire_logger'
+
   require 'ostruct'
   ROOT = ?/
 
-  def self.setup(options)
-    configuration = {}
-    configuration[:base_uri] = base_uri(options[:firebase_path])
-    configuration[:auth] = (options[:firebase_auth] || {})
-    @config = OpenStruct.new(configuration)
-  end
-
   class << self
+
+    def setup(options)
+      configuration = {}
+      configuration[:base_uri] = base_uri(options[:firebase_path])
+      configuration[:auth] = (options[:firebase_auth] || {})
+      setup_logger(options)
+      @config = OpenStruct.new(configuration)
+    end
 
     def config
       @config
+    end
+
+    def logger
+      @logger
+    end
+
+    def logger=(logger)
+      logger.extend(FireLogger::Ext)
+      @logger = logger
     end
 
     def connection
@@ -33,6 +45,12 @@ module Fire
 
     def reset_tree!(data=nil)
       connection.set(ROOT, data)
+    end
+
+    private
+
+    def setup_logger(options)
+      @logger = FireLogger.create(options)
     end
 
   end

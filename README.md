@@ -267,6 +267,8 @@ Fire.tree
                            'street'=>'Shevchenko Ave.'}}}}}})
 ```
 
+## Examples
+Check [this example](https://github.com/tarvit/fire-model-example) to see how `fire-model` integrates in a Rails app.
 
 **Contributing to fire-model**
  

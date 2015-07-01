@@ -1,14 +1,16 @@
 # fire-model - REST wrapper for Firebase.
+[![Gem Version](https://badge.fury.io/rb/fire-model.svg)](http://badge.fury.io/rb/fire-model)
 
 Install gem
 ```
 gem install fire-model
 ```
+Click [here](https://www.firebase.com/signup/) to create a free Firebase account if you don't have one.
 
-Setup Firebase. (If you are using Rails create a file `Rails.root/config/initializers/fire_model.rb` and put next line there)
+Setup Firebase. (If you are using Rails create a file `Rails.root/config/initializers/fire_model.rb` and put next line there).
 ```ruby
 require 'fire-model'
-Fire.setup(firebase_path: 'https://some-test-777.firebaseio.com')
+Fire.setup(firebase_path: 'https://<your subdomain here>.firebaseio.com')
 ```
 
 Declare your Model
@@ -265,6 +267,8 @@ Fire.tree
                            'street'=>'Shevchenko Ave.'}}}}}})
 ```
 
+## Examples
+Check [this example](https://github.com/tarvit/fire-model-example) to see how `fire-model` integrates in a Rails app.
 
 **Contributing to fire-model**
  

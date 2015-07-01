@@ -11,7 +11,7 @@ class FireLogger < ::Logger
     end
 
     def response(response_value, path)
-      debug "[RESPONSE] #{response_value.status}: #{ path } }"
+      debug "[RESPONSE] #{response_value.status}: #{ path }"
     end
 
   end

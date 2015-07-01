@@ -252,6 +252,44 @@ describe 'Fire Models' do
         expect(reloaded_point).to eq(p1)
       end
 
+      it 'should update/delete a field' do
+        class Box < Fire::Model
+          has_path_keys :a, :b
+        end
+
+        box = Box.create(id: 'box', a: 'a', b: 'b', slot1: 1, slot2: 2)
+
+        expect(Fire.tree).to eq({'Box'=>{'a'=>{'b'=>
+          {
+              'box'=>{'a'=>'a', 'b'=>'b', 'id'=>'box', 'slot1'=>1, 'slot2'=>2}
+          }
+        }}})
+
+        box.update_field(:slot1, 3)
+
+        expect(Fire.tree).to eq({'Box'=>{'a'=>{'b'=>
+          {
+             'box'=>{'a'=>'a', 'b'=>'b', 'id'=>'box', 'slot1'=>3, 'slot2'=>2}
+          }
+        }}})
+
+        box.update_field(:slot3, 4)
+
+        expect(Fire.tree).to eq({'Box'=>{'a'=>{'b'=>
+          {
+             'box'=>{'a'=>'a', 'b'=>'b', 'id'=>'box', 'slot1'=>3, 'slot2'=>2, 'slot3'=> 4}
+          }
+        }}})
+
+        box.delete_field(:slot3)
+
+        expect(Fire.tree).to eq({'Box'=>{'a'=>{'b'=>
+          {
+             'box'=>{'a'=>'a', 'b'=>'b', 'id'=>'box', 'slot1'=>3, 'slot2'=>2}
+          }
+        }}})
+      end
+
     end
 
   end

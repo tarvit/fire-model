@@ -35,6 +35,18 @@ module Fire
       self.class.collection_name
     end
 
+    def update_field(field, value)
+      self.send("#{field}=", value)
+      field_path = [path, field] * LEVEL_SEPARATOR
+      self.class.connection.set(field_path, value)
+    end
+
+    def delete_field(field)
+      self.send("#{field}=", nil)
+      field_path = [path, field] * LEVEL_SEPARATOR
+      self.class.connection.delete(field_path)
+    end
+
     def save
       self.class.new(@original_data).delete if path_changed?
       self.class.connection.set(path, self.saving_data)
